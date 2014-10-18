@@ -2,6 +2,8 @@ class KeyPhrasesController < ApplicationController
   require 'twitter'
   # require "yahoo_keyphrase_api"
   require 'net/http'
+  require 'open-uri'
+  require 'json'
 
   def index
     @users_favs = Favorite.where(user_id: current_user.id)
@@ -14,6 +16,7 @@ class KeyPhrasesController < ApplicationController
 
   def get_tweets
     @hoge = []
+    @res = []
 
     client = Twitter::REST::Client.new do |config|
       config.consumer_key        = 'Q0mqOUL0P5OB0dsZ6FdJVUWVB'
@@ -24,13 +27,46 @@ class KeyPhrasesController < ApplicationController
 
     client.user_timeline(screen_name: current_user.nickname, count: 200, exclude_replies: true, include_rts: false).each do |tweet|
       # Favorite.create(user_id: current_user.id, content: tweet.text, exclude_replies: true)
+
+      # yahooのキーワード抽出のurl
+      # appid=dj0zaiZpPThhYk8xaVFJSkJtUiZzPWNvbnN1bWVyc2VjcmV0Jng9MTc-&output=json&sentence=
+      # + ツイートたち
       @hoge.push(tweet.text)
+      if @hoge.length === 30
+        tweets = @hoge.join(' ')
+        # a = http_request('get', 'http://jlp.yahooapis.jp/KeyphraseService/V1/extract', {appid: 'dj0zaiZpPThhYk8xaVFJSkJtUiZzPWNvbnN1bWVyc2VjcmV0Jng9MTc-', output: 'json', sentence: tweets})
+        # p a
+        # @res += a
+        # @hoge = []
+        @res = OpenURI.open_uri('appid=dj0zaiZpPThhYk8xaVFJSkJtUiZzPWNvbnN1bWVyc2VjcmV0Jng9MTc-&output=json&sentence=' + tweets){|f|
+  f.each_line {|line| p line}
+}
+      end
     end
 
     # YahooKeyphraseApi::Config.app_id = "dj0zaiZpPThhYk8xaVFJSkJtUiZzPWNvbnN1bWVyc2VjcmV0Jng9MTc-"
     # ykp = YahooKeyphraseApi::KeyPhrase.new
 
-    render json: @hoge
+    render json: @res
+  end
+
+  def http_request(method, uri, query_hash = {}, user = nil, pass = nil)
+    uri = URI.parse(uri) if uri.is_a? String
+    method = method.to_s.strip.downcase
+    query_string = (query_hash||{}).map{|k,v|
+      URI.encode(k.to_s) + "=" + URI.encode(v.to_s)
+    }.join("&")
+
+    if method == "post"
+      args = [Net::HTTP::Post.new(uri.path), query_string]
+    else
+      args = [Net::HTTP::Get.new(uri.path + (query_string.empty? ? "" : "?#{query_string}"))]
+    end
+    args[0].basic_auth(user, pass) if user
+
+    Net::HTTP.start(uri.host, uri.port) do |http|
+      return http.request(*args)
+    end
   end
 
   def word_search_result(target="")
