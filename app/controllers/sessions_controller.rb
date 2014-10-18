@@ -13,7 +13,8 @@ class SessionsController < ApplicationController
 
   def loged_in
     render json: {
-      id: current_user.id
+      id: current_user.id,
+      icon: current_user.icon
     }
   end
 end
