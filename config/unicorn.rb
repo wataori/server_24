@@ -1,4 +1,4 @@
-@app_path = '/var/www/html/cookpad24'
+@app_path = '/home/morishin/server_24'
 
 worker_processes 2
 working_directory "#{@app_path}/"
