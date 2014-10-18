@@ -27,6 +27,7 @@ ActiveRecord::Schema.define(version: 20141018190423) do
     t.string   "name"
     t.datetime "created_at"
     t.datetime "updated_at"
+    t.string   "room"
     t.string   "icon"
   end
 
