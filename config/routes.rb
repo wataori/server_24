@@ -67,5 +67,4 @@ Rails.application.routes.draw do
       get 'get_tweets'
     end
   end
-
 end

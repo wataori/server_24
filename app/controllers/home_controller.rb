@@ -6,6 +6,7 @@ class HomeController < ApplicationController
     user = User.find(current_user.id)
 
     render json: {
+      id: user.id,
       icon: user.icon,
       name: user.nickname,
       content: Favorite.where(user_id: current_user.id).pluck(:content)
