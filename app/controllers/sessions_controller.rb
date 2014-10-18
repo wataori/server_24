@@ -12,7 +12,8 @@ class SessionsController < ApplicationController
   end
 
   def loged_in
-    @foo = 'foo'
-    # render json: @foo
+    render json: {
+      id: current_user.id
+    }
   end
 end
