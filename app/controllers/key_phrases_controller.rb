@@ -24,6 +24,13 @@ class KeyPhrasesController < ApplicationController
   end
 
   def show
+    user = User.find(params[:id])
+
+    render json: {
+      icon: user.icon,
+      name: user.nickname,
+      content: Favorite.where(user_id: cuser.id).pluck(:content)
+    }
   end
 
   def get_tweets
