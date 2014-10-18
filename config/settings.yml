@@ -1,0 +1,13 @@
+defaults: &defaults
+
+development:
+  <<: *defaults
+  twitter:
+    consumer_key: Q0mqOUL0P5OB0dsZ6FdJVUWVB
+    consumer_secret: EAO1rMvkXMwTiZb3ms20l96FeDX71SE8GzMsguWsjRlqCVAeoR
+
+test:
+  <<: *defaults
+
+production:
+  <<: *defaults
