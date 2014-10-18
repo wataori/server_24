@@ -7,8 +7,12 @@ class KeyPhrasesController < ApplicationController
   def index
     users_favs = Favorite.where(user_id: current_user.id).pluck(:content)
     user_ids = User.where(room: current_user.room).where.not(id: current_user.id).pluck(:id)
-    others_favs = Favorite.where(user_id: user_ids).group(:user_id).count
-    render json: others_favs
+    content = []
+    user_ids.each do |user_id|
+      other_favs = Favorite.where(user_id: user_id).pluck(:content)
+      content.push(other_favs)
+    end
+    render json: content
   end
 
   def show
