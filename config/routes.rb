@@ -53,9 +53,14 @@ Rails.application.routes.draw do
   #     # (app/controllers/admin/products_controller.rb)
   #     resources :products
   #   end
+
   root 'home#index'
   get "home/index"
   get '/auth/:provider/callback', :to => 'sessions#callback'
   post '/auth/:provider/callback', :to => 'sessions#callback'
   get '/logout' => 'sessions#destroy', :as => :logout
+  get '/logined' => 'sessions#logined'
+
+  resources :key_phrases
+
 end

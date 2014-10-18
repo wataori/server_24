@@ -1,0 +1,2 @@
+module KeyPhrasesHelper
+end
