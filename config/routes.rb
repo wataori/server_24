@@ -61,6 +61,10 @@ Rails.application.routes.draw do
   get '/logout' => 'sessions#destroy', :as => :logout
   get '/loged_in' => 'sessions#loged_in'
 
-  resources :key_phrases
+  resources :key_phrases do
+    collection do
+      get 'get_tweets'
+    end
+  end
 
 end
