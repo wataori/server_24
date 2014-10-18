@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20141018145453) do
+ActiveRecord::Schema.define(version: 20141018190423) do
 
   create_table "favorites", force: true do |t|
     t.string   "content"
@@ -27,6 +27,7 @@ ActiveRecord::Schema.define(version: 20141018145453) do
     t.string   "name"
     t.datetime "created_at"
     t.datetime "updated_at"
+    t.string   "icon"
   end
 
 end
