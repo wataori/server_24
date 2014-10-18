@@ -5,9 +5,10 @@ class KeyPhrasesController < ApplicationController
   require 'json'
 
   def index
-    @users_favs = Favorite.where(user_id: current_user.id)
-    @others_favs = Favorite.group(:user)
-    render json: @others_favs
+    users_favs = Favorite.where(user_id: current_user.id).pluck(:content)
+    user_ids = User.where(room: current_user.room).where.not(id: current_user.id).pluck(:id)
+    others_favs = Favorite.where(user_id: user_ids).group(:user_id).count
+    render json: others_favs
   end
 
   def show
@@ -46,5 +47,4 @@ class KeyPhrasesController < ApplicationController
 
     render json: aaaa
   end
-
 end
