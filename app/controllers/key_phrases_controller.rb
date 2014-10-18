@@ -9,6 +9,7 @@ class KeyPhrasesController < ApplicationController
     c_user = User.find(user_id)
 
     users = User.where(room: c_user.room).where.not(id: c_user.id)
+
     json = []
     levels = {}
 
@@ -36,6 +37,14 @@ class KeyPhrasesController < ApplicationController
   end
 
   def show
+    user = User.find(params[:id])
+
+    render json: {
+      id: user.id,
+      icon: user.icon,
+      name: user.nickname,
+      content: Favorite.where(user_id: user.id).pluck(:content)
+    }
   end
 
   def get_tweets

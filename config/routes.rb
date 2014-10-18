@@ -56,15 +56,15 @@ Rails.application.routes.draw do
 
   root 'home#index'
   get "home/index"
+  get 'home/me'
   get '/auth/:provider/callback', :to => 'sessions#callback'
   post '/auth/:provider/callback', :to => 'sessions#callback'
   get '/logout' => 'sessions#destroy', :as => :logout
   get '/loged_in' => 'sessions#loged_in'
 
-  resources :key_phrases do
+  resources :key_phrases, only: [:index, :show] do
     collection do
       get 'get_tweets'
     end
   end
-
 end
