@@ -59,7 +59,8 @@ class SessionsController < ApplicationController
     end
 
     render json: {
-      id: current_user.id
+      id: current_user.id,
+      icon: current_user.icon
     }
   end
 end
