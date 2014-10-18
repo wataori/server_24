@@ -8,6 +8,11 @@ class KeyPhrasesController < ApplicationController
     user_id = params[:user_id].present? ? params[:user_id].to_i : current_user.id
     c_user = User.find(user_id)
 
+    if params[:group].present?
+      c_user.room = params[:group]
+      c_user.save
+    end
+
     users = User.where(room: c_user.room).where.not(id: c_user.id)
 
     json = []
@@ -31,6 +36,10 @@ class KeyPhrasesController < ApplicationController
         content: favorites.where(user_id: user_info.id).pluck(:content) & my_favorites
       }
       json.push(user)
+    end
+
+    json = json.sort do |a, b|
+      b[:level] <=> a[:level]
     end
 
     render json: json
