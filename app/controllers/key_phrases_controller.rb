@@ -1,6 +1,5 @@
 class KeyPhrasesController < ApplicationController
   require 'twitter'
-  # require "yahoo_keyphrase_api"
   require 'net/http'
   require 'open-uri'
   require 'json'
@@ -16,7 +15,8 @@ class KeyPhrasesController < ApplicationController
 
   def get_tweets
     @hoge = []
-    @res = []
+    res = {}
+    @aaaa = []
 
     client = Twitter::REST::Client.new do |config|
       config.consumer_key        = 'Q0mqOUL0P5OB0dsZ6FdJVUWVB'
@@ -28,26 +28,24 @@ class KeyPhrasesController < ApplicationController
     client.user_timeline(screen_name: current_user.nickname, count: 200, exclude_replies: true, include_rts: false).each do |tweet|
       # Favorite.create(user_id: current_user.id, content: tweet.text, exclude_replies: true)
 
-      # yahooのキーワード抽出のurl
-      # appid=dj0zaiZpPThhYk8xaVFJSkJtUiZzPWNvbnN1bWVyc2VjcmV0Jng9MTc-&output=json&sentence=
-      # + ツイートたち
       @hoge.push(tweet.text)
       if @hoge.length === 30
         tweets = @hoge.join(' ')
-        # a = http_request('get', 'http://jlp.yahooapis.jp/KeyphraseService/V1/extract', {appid: 'dj0zaiZpPThhYk8xaVFJSkJtUiZzPWNvbnN1bWVyc2VjcmV0Jng9MTc-', output: 'json', sentence: tweets})
-        # p a
-        # @res += a
-        # @hoge = []
-        @res = OpenURI.open_uri('appid=dj0zaiZpPThhYk8xaVFJSkJtUiZzPWNvbnN1bWVyc2VjcmV0Jng9MTc-&output=json&sentence=' + tweets){|f|
-  f.each_line {|line| p line}
-}
+        url = ERB::Util.url_encode(tweets)
+        res = OpenURI.open_uri('http://jlp.yahooapis.jp/KeyphraseService/V1/extract?appid=dj0zaiZpPThhYk8xaVFJSkJtUiZzPWNvbnN1bWVyc2VjcmV0Jng9MTc-&output=json&sentence=' + url)
       end
+    end
+    @aaaa.push(JSON.load(res))
+
+    @a = []
+    @aaaa.each do |k, v|
+      @a.push(k)
     end
 
     # YahooKeyphraseApi::Config.app_id = "dj0zaiZpPThhYk8xaVFJSkJtUiZzPWNvbnN1bWVyc2VjcmV0Jng9MTc-"
     # ykp = YahooKeyphraseApi::KeyPhrase.new
 
-    render json: @res
+    render json: @aaaa
   end
 
   def http_request(method, uri, query_hash = {}, user = nil, pass = nil)
