@@ -13,6 +13,6 @@ class SessionsController < ApplicationController
 
   def loged_in
     @foo = 'foo'
-    render json: @foo
+    # render json: @foo
   end
 end
